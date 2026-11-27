@@ -14,8 +14,12 @@ const starterProjects = [
 const defaultProfile = {
   displayName: "Ateliê",
   specialty: "Direção de arte\nDesign gráfico\nImagem & matéria",
+  headlineOne: "Ideias em processo.",
+  headlineTwo: "Trabalhos com intenção.",
+  intro: "Um arquivo vivo de imagens, objetos e identidades feitos com tempo, curiosidade e cuidado.",
   bio: "Sou uma designer independente que trabalha entre identidade visual, imagem e objetos. Gosto de projetos que começam com uma boa pergunta e encontram sua forma no caminho.",
-  contactEmail: "oi@atelie.studio"
+  contactEmail: "oi@atelie.studio",
+  appearance: { theme: "atelier", accent: "#a95736", typeface: "classic", layout: "editorial", cardShape: "square", showAbout: true, showContact: true }
 };
 
 let currentUser = firebaseBackend.auth.currentUser;
@@ -52,11 +56,12 @@ function readProjects() {
   return copyProjects(starterProjects);
 }
 function readProfile() {
-  if (!currentUser) return Object.assign({}, defaultProfile);
+  if (!currentUser) return Object.assign({}, defaultProfile, { appearance: Object.assign({}, defaultProfile.appearance) });
   const stored = firebaseBackend.firestore.collection("profiles", currentUser.uid).get();
   return Object.assign({}, defaultProfile, stored || {}, {
     displayName: (stored && stored.displayName) || currentUser.displayName || "Meu ateliê",
-    contactEmail: (stored && stored.contactEmail) || currentUser.email || ""
+    contactEmail: (stored && stored.contactEmail) || currentUser.email || "",
+    appearance: Object.assign({}, defaultProfile.appearance, stored && stored.appearance || {})
   });
 }
 let projects = readProjects();
@@ -110,13 +115,27 @@ function saveProjects() {
   if (!saved) showToast("Não foi possível salvar neste navegador.");
   return saved;
 }
+function applyAppearance(appearance) {
+  const settings = Object.assign({}, defaultProfile.appearance, appearance || {});
+  document.body.dataset.theme = settings.theme;
+  document.body.dataset.typeface = settings.typeface;
+  document.body.dataset.layout = settings.layout;
+  document.body.dataset.cardShape = settings.cardShape;
+  document.body.style.setProperty("--rust", settings.accent || defaultProfile.appearance.accent);
+}
 function applyProfileToPage() {
   const ownerName = profile.displayName || (currentUser && currentUser.displayName) || "Ateliê";
   document.getElementById("ownerName").textContent = ownerName;
   document.getElementById("profileSpecialty").innerHTML = escapeHtml(profile.specialty || "").replace(/\n/g, "<br>");
   document.getElementById("profileBio").textContent = profile.bio || "";
+  document.getElementById("introLineOne").textContent = profile.headlineOne || defaultProfile.headlineOne;
+  document.getElementById("introLineTwo").textContent = profile.headlineTwo || defaultProfile.headlineTwo;
+  document.getElementById("introDescription").textContent = profile.intro || defaultProfile.intro;
+  document.getElementById("sobre").hidden = profile.appearance.showAbout === false;
   const contact = document.getElementById("contactLink");
   contact.href = profile.contactEmail ? "mailto:" + profile.contactEmail : "#";
+  contact.hidden = profile.appearance.showContact === false;
+  applyAppearance(profile.appearance);
   document.getElementById("accountAction").textContent = currentUser ? "Meu perfil" : "Entrar";
 }
 function updateBackendLabel(user) {
@@ -255,8 +274,21 @@ function openEditor(project) {
 function openProfile() {
   document.getElementById("profileNameField").value = profile.displayName || "";
   document.getElementById("profileSpecialtyField").value = profile.specialty || "";
+  document.getElementById("profileHeadlineOne").value = profile.headlineOne || defaultProfile.headlineOne;
+  document.getElementById("profileHeadlineTwo").value = profile.headlineTwo || defaultProfile.headlineTwo;
+  document.getElementById("profileIntroField").value = profile.intro || defaultProfile.intro;
   document.getElementById("profileBioField").value = profile.bio || "";
   document.getElementById("profileEmailField").value = profile.contactEmail || "";
+  const appearance = Object.assign({}, defaultProfile.appearance, profile.appearance || {});
+  document.getElementById("themeField").value = appearance.theme;
+  document.getElementById("accentField").value = appearance.accent;
+  document.getElementById("typefaceField").value = appearance.typeface;
+  document.getElementById("layoutField").value = appearance.layout;
+  document.getElementById("cardShapeField").value = appearance.cardShape;
+  document.getElementById("showAboutField").checked = appearance.showAbout !== false;
+  document.getElementById("showContactField").checked = appearance.showContact !== false;
+  switchProfilePanel("profile");
+  updateAppearancePreview();
   profileDialog.showModal();
 }
 function openDetail(project) {
@@ -381,19 +413,75 @@ document.getElementById("signOutButton").addEventListener("click", async functio
   profileDialog.close();
   showToast("Você saiu do seu portfólio.");
 });
+function getAppearanceFromFields() {
+  return {
+    theme: document.getElementById("themeField").value,
+    accent: document.getElementById("accentField").value,
+    typeface: document.getElementById("typefaceField").value,
+    layout: document.getElementById("layoutField").value,
+    cardShape: document.getElementById("cardShapeField").value,
+    showAbout: document.getElementById("showAboutField").checked,
+    showContact: document.getElementById("showContactField").checked
+  };
+}
+function switchProfilePanel(name) {
+  const appearance = name === "appearance";
+  document.getElementById("profilePanel").hidden = appearance;
+  document.getElementById("appearancePanel").hidden = !appearance;
+  document.querySelectorAll("[data-profile-panel]").forEach(function (button) {
+    const selected = button.dataset.profilePanel === name;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-selected", String(selected));
+  });
+}
+function updateAppearancePreview() {
+  const settings = getAppearanceFromFields();
+  applyAppearance(settings);
+  const name = document.getElementById("profileNameField").value.trim() || "Seu ateliê";
+  const lineOne = document.getElementById("profileHeadlineOne").value.trim() || defaultProfile.headlineOne;
+  const lineTwo = document.getElementById("profileHeadlineTwo").value.trim() || defaultProfile.headlineTwo;
+  const intro = document.getElementById("profileIntroField").value.trim() || "Seu trabalho, sua linguagem, seu espaço.";
+  document.getElementById("miniProfileName").textContent = name;
+  document.getElementById("miniHeadline").innerHTML = escapeHtml(lineOne) + "<br><em>" + escapeHtml(lineTwo) + "</em>";
+  document.getElementById("miniIntro").textContent = intro;
+}
+document.querySelectorAll("[data-profile-panel]").forEach(function (button) {
+  button.addEventListener("click", function () { switchProfilePanel(button.dataset.profilePanel); });
+});
+["themeField", "accentField", "typefaceField", "layoutField", "cardShapeField", "showAboutField", "showContactField", "profileNameField", "profileHeadlineOne", "profileHeadlineTwo", "profileIntroField"].forEach(function (id) {
+  document.getElementById(id).addEventListener("input", updateAppearancePreview);
+  document.getElementById(id).addEventListener("change", updateAppearancePreview);
+});
+document.getElementById("resetAppearance").addEventListener("click", function () {
+  const appearance = defaultProfile.appearance;
+  document.getElementById("themeField").value = appearance.theme;
+  document.getElementById("accentField").value = appearance.accent;
+  document.getElementById("typefaceField").value = appearance.typeface;
+  document.getElementById("layoutField").value = appearance.layout;
+  document.getElementById("cardShapeField").value = appearance.cardShape;
+  document.getElementById("showAboutField").checked = appearance.showAbout;
+  document.getElementById("showContactField").checked = appearance.showContact;
+  updateAppearancePreview();
+});
+profileDialog.addEventListener("close", function () { applyProfileToPage(); });
+
 profileForm.addEventListener("submit", function (event) {
   event.preventDefault();
   if (!currentUser) return;
   profile = {
     displayName: document.getElementById("profileNameField").value.trim(),
     specialty: document.getElementById("profileSpecialtyField").value.trim(),
+    headlineOne: document.getElementById("profileHeadlineOne").value.trim() || defaultProfile.headlineOne,
+    headlineTwo: document.getElementById("profileHeadlineTwo").value.trim() || defaultProfile.headlineTwo,
+    intro: document.getElementById("profileIntroField").value.trim() || defaultProfile.intro,
     bio: document.getElementById("profileBioField").value.trim(),
-    contactEmail: document.getElementById("profileEmailField").value.trim()
+    contactEmail: document.getElementById("profileEmailField").value.trim(),
+    appearance: getAppearanceFromFields()
   };
   firebaseBackend.firestore.collection("profiles", currentUser.uid).set(profile);
-  profileDialog.close();
   applyProfileToPage();
-  showToast("Seu perfil foi atualizado.");
+  profileDialog.close();
+  showToast("Seu perfil e identidade visual foram salvos.");
 });
 
 function useImageFile(file) {
