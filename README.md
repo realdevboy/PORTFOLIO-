@@ -10,7 +10,9 @@ This first version is a dependency-free static app. Serve the repository with a 
 
 - Public-facing portfolio with an editorial gallery, category filters, search, and project detail view.
 - Local sign-up, sign-in, and sign-out flows with an individual profile per account.
-- Profile editor for name, specialties, biography, and public contact e-mail.
+- Profile editor for name, specialties, biography, public contact e-mail, and custom introduction copy.
+- Per-profile visual customization: four palettes, custom accent color, typography, gallery layout, image corner style, and show/hide controls for about and contact sections.
+- Live appearance preview while editing, with saved choices applied to the public portfolio.
 - Visual project composer with live desktop and mobile previews.
 - Image upload or image URL, plus project title, category, year, description, and tags.
 - Publish, save draft, edit, delete, feature, and reorder projects.
