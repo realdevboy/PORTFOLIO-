@@ -26,7 +26,7 @@
     createUserWithEmailAndPassword: async function (name, email, password) {
       const normalizedEmail = String(email).trim().toLowerCase();
       if (accounts[normalizedEmail]) throw new Error("Este e-mail já tem uma conta. Entre ou use outro endereço.");
-      if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(normalizedEmail)) throw new Error("Digite um e-mail válido.");
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) throw new Error("Digite um e-mail válido.");
       if (String(password).length < 8) throw new Error("A senha precisa ter pelo menos 8 caracteres.");
       const uid = makeId();
       accounts[normalizedEmail] = { uid: uid, email: normalizedEmail, displayName: String(name).trim(), passwordDigest: await digest(password, uid) };
@@ -34,7 +34,7 @@
       const user = publicUser(accounts[normalizedEmail]);
       auth.currentUser = user;
       write(sessionKey, { email: normalizedEmail });
-      firestore.collection("profiles", uid).set({ displayName: user.displayName || "Meu ateliê", specialty: "Artista independente\\nDesign & imagem", bio: "Um espaço para compartilhar ideias, processos e projetos autorais.", contactEmail: normalizedEmail });
+      firestore.collection("profiles", uid).set({ displayName: user.displayName || "Meu ateliê", specialty: "Artista independente\nDesign & imagem", bio: "Um espaço para compartilhar ideias, processos e projetos autorais.", contactEmail: normalizedEmail });
       listeners.forEach(function (callback) { callback(user); });
       return { user: user };
     },
@@ -44,7 +44,7 @@
         const uid = "atelier-demo-user";
         accounts[normalizedEmail] = { uid: uid, email: normalizedEmail, displayName: "Ateliê Demo", passwordDigest: await digest(password, uid) };
         write(accountsKey, accounts);
-        firestore.collection("profiles", uid).set({ displayName: "Ateliê Demo", specialty: "Direção de arte\\nDesign gráfico\\nImagem & matéria", bio: "Sou uma designer independente que trabalha entre identidade visual, imagem e objetos. Gosto de projetos que começam com uma boa pergunta e encontram sua forma no caminho.", contactEmail: normalizedEmail });
+        firestore.collection("profiles", uid).set({ displayName: "Ateliê Demo", specialty: "Direção de arte\nDesign gráfico\nImagem & matéria", bio: "Sou uma designer independente que trabalha entre identidade visual, imagem e objetos. Gosto de projetos que começam com uma boa pergunta e encontram sua forma no caminho.", contactEmail: normalizedEmail });
       }
       const account = accounts[normalizedEmail];
       if (!account || account.passwordDigest !== await digest(password, account.uid)) throw new Error("E-mail ou senha não conferem.");
@@ -61,26 +61,52 @@
       return { get: function () { const value = read(key); return value === null ? null : clone(value); }, set: function (value) { return write(key, clone(value)); }, setAll: function (documents) { return write(key, clone(documents)); }, clear: function () { try { localStorage.removeItem(key); return true; } catch (error) { return false; } } };
     }
   };
+  function compressImage(file) {
+    return createImageBitmap(file).then(function (bitmap) {
+      const scale = Math.min(1, 1400 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+      return new Promise(function (resolve, reject) {
+        canvas.toBlob(function (blob) {
+          if (!blob) return reject(new Error("Não foi possível preparar esta imagem."));
+          const reader = new FileReader();
+          reader.onload = function () { resolve(String(reader.result || "")); };
+          reader.onerror = function () { reject(new Error("Não foi possível ler a imagem preparada.")); };
+          reader.readAsDataURL(blob);
+        }, "image/jpeg", 0.78);
+      });
+    });
+  }
   const storage = {
     uploadImage: function (file, ownerId, projectId) {
       return new Promise(function (resolve, reject) {
         if (!file) return resolve(null);
-        if (!/^image\\/(png|jpeg|webp)$/.test(file.type)) return reject(new Error("Use uma imagem JPG, PNG ou WebP."));
+        if (!/^image\/(png|jpeg|webp)$/.test(file.type)) return reject(new Error("Use uma imagem JPG, PNG ou WebP."));
         if (file.size > 2 * 1024 * 1024) return reject(new Error("A imagem deve ter no máximo 2 MB."));
-        const reader = new FileReader();
-        reader.onload = function () {
-          const url = String(reader.result || "");
+        compressImage(file).then(function (url) {
           const references = read(namespace + "storage:references") || {};
-          references[ownerId + ":" + projectId] = { name: file.name, type: file.type, size: file.size, url: url, mode: "local-emulator" };
+          references[ownerId + ":" + projectId] = { name: file.name, type: "image/jpeg", size: url.length, url: url, mode: "local-emulator" };
           if (!write(namespace + "storage:references", references)) return reject(new Error("O navegador não tem espaço para guardar esta imagem."));
-          resolve(url);
-        };
-        reader.onerror = function () { reject(new Error("Não foi possível ler a imagem selecionada.")); };
-        reader.readAsDataURL(file);
+          resolve("mock-storage://" + ownerId + "/" + projectId);
+        }).catch(reject);
       });
     },
-    saveReference: function (ownerId, projectId, url) { const references = read(namespace + "storage:references") || {}; references[ownerId + ":" + projectId] = { url: url, mode: "url-reference" }; write(namespace + "storage:references", references); return Promise.resolve({ downloadURL: url }); },
-    getReference: function (ownerId, projectId) { const references = read(namespace + "storage:references") || {}; return references[ownerId + ":" + projectId] || null; }
+    saveReference: function (ownerId, projectId, url) {
+      const references = read(namespace + "storage:references") || {};
+      references[ownerId + ":" + projectId] = { url: url, mode: "url-reference" };
+      write(namespace + "storage:references", references);
+      return Promise.resolve({ downloadURL: url });
+    },
+    resolveUrl: function (path) {
+      if (!String(path || "").startsWith("mock-storage://")) return path || "";
+      const parts = path.slice("mock-storage://".length).split("/");
+      const references = read(namespace + "storage:references") || {};
+      const record = references[parts[0] + ":" + parts[1]];
+      return record ? record.url : "";
+    }
   };
   window.firebaseMock = { mode: "local-emulator", app: { name: "editorial-atelier-demo", options: { projectId: "atelier-local-demo" } }, auth: auth, firestore: firestore, storage: storage };
 })();
