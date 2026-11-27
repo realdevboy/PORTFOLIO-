@@ -209,3 +209,9 @@ h1 em, h2 em { color: var(--olive); font-weight: 500; }
   .form-row { grid-template-columns: 1fr 85px; }
   .toast { right: 14px; bottom: 14px; left: 14px; text-align: center; }
 }
+
+.backend-pill { display: inline-flex; align-items: center; gap: 7px; color: #77796f; font-size: 9px; letter-spacing: .03em; white-space: nowrap; }
+.backend-pill:before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #788650; box-shadow: 0 0 0 3px #78865020; }
+@media (max-width: 600px) {
+  .backend-pill { display: none; }
+}
