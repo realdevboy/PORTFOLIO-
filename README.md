@@ -6,6 +6,15 @@ Portfolio web app for artists and designers to showcase and organize personal pr
 
 This first version is a dependency-free static app. Open `index.html` in a modern browser or serve the repository with any static web server.
 
+## Firebase simulation
+
+A small Firebase-shaped adapter is loaded from `firebase-mock.js`:
+- Anonymous demo sign-in with a persistent local demo user.
+- A Firestore-like `projects` collection backed by browser local storage.
+- Storage URL references for project cover images.
+
+This is a local preview emulator, not a connection to a real Firebase project. It uses no Firebase credentials and does not sync across browsers or devices.
+
 ## Features
 
 - Public-facing portfolio with an editorial project gallery, category filters, and search.
