@@ -20,6 +20,7 @@
       <a href="#sobre">Sobre</a>
       <a href="mailto:oi@atelie.studio">Contato <span aria-hidden="true">↗</span></a>
     </nav>
+    <span class="backend-pill" id="backendStatus" role="status">Firebase simulado · conectando</span>
     <button class="manage-button" id="manageToggle" type="button" aria-pressed="false"><span class="manage-icon" aria-hidden="true">✳</span><span id="manageLabel">Organizar</span></button>
   </header>
 
@@ -49,7 +50,7 @@
         <div class="filter-list" id="filters" role="group" aria-label="Filtrar projetos"></div>
         <label class="search-box"><span class="search-icon" aria-hidden="true">⌕</span><span class="sr-only">Buscar projetos</span><input id="searchInput" type="search" placeholder="Buscar no arquivo…" autocomplete="off"></label>
       </div>
-      <p class="manage-hint" id="manageHint" hidden>Modo de organização: edite, destaque, publique ou reordene seus projetos. As alterações ficam salvas neste navegador.</p>
+      <p class="manage-hint" id="manageHint" hidden>Modo de organização: edite, destaque, publique ou reordene seus projetos. O Firebase simulado salva as alterações neste navegador.</p>
       <div class="project-grid" id="projectGrid" aria-live="polite"></div>
       <div class="empty-state" id="emptyState" hidden>
         <span aria-hidden="true">✳</span>
@@ -102,6 +103,7 @@
     </form>
   </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="firebase-mock.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
