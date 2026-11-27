@@ -29,8 +29,8 @@
     <section class="intro" aria-labelledby="introTitle">
       <div class="intro-copy">
         <p class="eyebrow"><span class="eyebrow-line"></span> Portfólio independente <span class="eyebrow-year">· <span id="ownerName">Ateliê</span></span></p>
-        <h1 id="introTitle">Ideias em processo.<br><em>Trabalhos com intenção.</em></h1>
-        <p class="intro-description">Um arquivo vivo de imagens, objetos e identidades feitos com tempo, curiosidade e cuidado.</p>
+        <h1 id="introTitle"><span id="introLineOne">Ideias em processo.</span><br><em id="introLineTwo">Trabalhos com intenção.</em></h1>
+        <p class="intro-description" id="introDescription">Um arquivo vivo de imagens, objetos e identidades feitos com tempo, curiosidade e cuidado.</p>
       </div>
       <aside class="intro-note" aria-label="Sobre o arquivo">
         <span class="note-index">PERFIL PESSOAL</span>
@@ -85,13 +85,45 @@
 
   <dialog class="profile-dialog" id="profileDialog" aria-labelledby="profileTitle">
     <form id="profileForm">
-      <div class="editor-heading"><div><p class="eyebrow">Identidade pública</p><h2 id="profileTitle">Editar perfil</h2></div><button class="dialog-close" type="button" data-close="profileDialog" aria-label="Fechar perfil">×</button></div>
-      <label>Nome artístico<input id="profileNameField" required maxlength="70"></label>
-      <label>Especialidades <span class="field-note">separe com quebras de linha</span><textarea id="profileSpecialtyField" rows="3" maxlength="140"></textarea></label>
-      <label>Sobre você<textarea id="profileBioField" rows="4" maxlength="500"></textarea></label>
-      <label>E-mail de contato<input id="profileEmailField" type="email" placeholder="oi@seuatelie.com"></label>
-      <p class="demo-disclaimer">Este perfil aparece junto ao seu portfólio público nesta demonstração.</p>
-      <div class="form-actions"><button class="cancel-button" type="button" data-close="profileDialog">Cancelar</button><button class="save-button" type="submit">Salvar perfil <span aria-hidden="true">↗</span></button></div>
+      <div class="editor-heading"><div><p class="eyebrow">Seu portfólio, suas regras</p><h2 id="profileTitle">Editar perfil</h2></div><button class="dialog-close" type="button" data-close="profileDialog" aria-label="Fechar perfil">×</button></div>
+      <div class="profile-tabs" role="tablist" aria-label="Editar portfólio">
+        <button class="profile-tab active" type="button" data-profile-panel="profile" aria-selected="true">Perfil</button>
+        <button class="profile-tab" type="button" data-profile-panel="appearance" aria-selected="false">Aparência</button>
+      </div>
+      <section class="profile-panel" id="profilePanel">
+        <div class="profile-fields-grid">
+          <label>Nome artístico<input id="profileNameField" required maxlength="70"></label>
+          <label>Especialidades <span class="field-note">separe com quebras de linha</span><textarea id="profileSpecialtyField" rows="3" maxlength="140"></textarea></label>
+          <label>Título de apresentação <span class="field-note">primeira linha</span><input id="profileHeadlineOne" maxlength="70" placeholder="Ideias em processo."></label>
+          <label>Complemento <span class="field-note">segunda linha</span><input id="profileHeadlineTwo" maxlength="70" placeholder="Trabalhos com intenção."></label>
+          <label class="profile-wide">Introdução curta<textarea id="profileIntroField" rows="3" maxlength="220" placeholder="Uma frase para apresentar seu trabalho."></textarea></label>
+          <label class="profile-wide">Sobre você<textarea id="profileBioField" rows="4" maxlength="500"></textarea></label>
+          <label>E-mail de contato<input id="profileEmailField" type="email" placeholder="oi@seuatelie.com"></label>
+        </div>
+      </section>
+      <section class="profile-panel appearance-panel" id="appearancePanel" hidden>
+        <div class="appearance-controls">
+          <p class="appearance-lead">Construa uma identidade visual só sua. As mudanças aparecem na prévia enquanto você escolhe.</p>
+          <label>Paleta<select id="themeField"><option value="atelier">Atelier clássico</option><option value="terracotta">Terra & tinta</option><option value="cobalt">Cobalto editorial</option><option value="nocturne">Nocturne</option></select></label>
+          <label>Cor de assinatura<span class="color-picker-row"><input id="accentField" type="color" value="#a95736"><span>Escolha a cor que acompanha links, detalhes e destaques.</span></span></label>
+          <label>Tipografia<select id="typefaceField"><option value="classic">Serifada editorial</option><option value="modern">Sans contemporânea</option><option value="mono">Monoespaçada</option></select></label>
+          <label>Composição da galeria<select id="layoutField"><option value="editorial">Editorial assimétrica</option><option value="uniform">Grade uniforme</option><option value="airy">Grade arejada</option></select></label>
+          <label>Formato das imagens<select id="cardShapeField"><option value="square">Bordas retas</option><option value="soft">Cantos suaves</option><option value="round">Cantos arredondados</option></select></label>
+          <div class="appearance-toggles"><label class="check-row"><input id="showAboutField" type="checkbox" checked> Mostrar seção “Sobre”</label><label class="check-row"><input id="showContactField" type="checkbox" checked> Mostrar contato</label></div>
+          <button class="reset-appearance" id="resetAppearance" type="button">Voltar ao estilo Atelier clássico</button>
+        </div>
+        <aside class="appearance-preview" aria-label="Prévia do estilo escolhido">
+          <div class="appearance-preview-head"><span class="eyebrow"><span class="eyebrow-line"></span>Prévia ao vivo</span><span class="preview-live-dot"></span></div>
+          <div class="appearance-mini-site">
+            <div class="mini-site-top"><span class="mini-monogram">a.</span><span id="miniProfileName">Seu ateliê</span><span class="mini-menu">MENU</span></div>
+            <div class="mini-site-copy"><span class="mini-kicker">PORTFÓLIO INDEPENDENTE</span><h3 id="miniHeadline">Ideias em processo.<br><em>Trabalhos com intenção.</em></h3><p id="miniIntro">Seu trabalho, sua linguagem, seu espaço.</p></div>
+            <div class="mini-projects"><span class="mini-project mini-project-large"></span><span class="mini-project"></span><span class="mini-project"></span></div>
+          </div>
+          <p class="appearance-note">Perfil e aparência salvos na sua conta local.</p>
+        </aside>
+      </section>
+      <p class="demo-disclaimer">A aparência e o conteúdo são personalizados por perfil. Nesta prévia local, as configurações ficam neste navegador.</p>
+      <div class="form-actions"><button class="cancel-button" type="button" data-close="profileDialog">Cancelar</button><button class="save-button" type="submit">Salvar personalização <span aria-hidden="true">↗</span></button></div>
       <button class="signout-button" id="signOutButton" type="button">Sair da conta</button>
     </form>
   </dialog>
