@@ -16,94 +16,113 @@
   <header class="site-header">
     <a class="wordmark" href="#" aria-label="Ateliê, início"><span class="wordmark-mark">a.</span><span>arquivo<br><small>de projetos</small></span></a>
     <nav class="main-nav" aria-label="Navegação principal">
-      <a href="#projetos">Projetos</a>
-      <a href="#sobre">Sobre</a>
-      <a href="mailto:oi@atelie.studio">Contato <span aria-hidden="true">↗</span></a>
+      <a href="#projetos">Projetos</a><a href="#sobre">Sobre</a><a href="mailto:oi@atelie.studio">Contato <span aria-hidden="true">↗</span></a>
     </nav>
-    <span class="backend-pill" id="backendStatus" role="status">Firebase simulado · conectando</span>
-    <button class="manage-button" id="manageToggle" type="button" aria-pressed="false"><span class="manage-icon" aria-hidden="true">✳</span><span id="manageLabel">Organizar</span></button>
+    <span class="backend-pill" id="backendStatus" role="status">Firebase simulado · local</span>
+    <div class="header-actions">
+      <button class="profile-button" id="accountAction" type="button">Entrar</button>
+      <button class="manage-button" id="manageToggle" type="button" aria-pressed="false"><span class="manage-icon" aria-hidden="true">✳</span><span id="manageLabel">Organizar</span></button>
+    </div>
   </header>
 
   <main>
     <section class="intro" aria-labelledby="introTitle">
       <div class="intro-copy">
-        <p class="eyebrow"><span class="eyebrow-line"></span> Portfólio independente <span class="eyebrow-year">· 2025—26</span></p>
+        <p class="eyebrow"><span class="eyebrow-line"></span> Portfólio independente <span class="eyebrow-year">· <span id="ownerName">Ateliê</span></span></p>
         <h1 id="introTitle">Ideias em processo.<br><em>Trabalhos com intenção.</em></h1>
         <p class="intro-description">Um arquivo vivo de imagens, objetos e identidades feitos com tempo, curiosidade e cuidado.</p>
       </div>
       <aside class="intro-note" aria-label="Sobre o arquivo">
-        <span class="note-index">EST. 2021</span>
-        <p>Direção de arte<br>Design gráfico<br>Imagem & matéria</p>
+        <span class="note-index">PERFIL PESSOAL</span>
+        <p id="profileSpecialty">Direção de arte<br>Design gráfico<br>Imagem & matéria</p>
         <span class="note-star" aria-hidden="true">✳</span>
       </aside>
     </section>
 
     <section class="work-section" id="projetos" aria-labelledby="workTitle">
       <div class="section-heading">
-        <div>
-          <p class="eyebrow section-kicker">O que tenho feito</p>
-          <h2 id="workTitle">Projetos <span id="projectCount" class="count">08</span></h2>
-        </div>
-        <button class="new-project-button" id="newProject" type="button" hidden><span aria-hidden="true">＋</span> Novo projeto</button>
+        <div><p class="eyebrow section-kicker">O que tenho feito</p><h2 id="workTitle">Projetos <span id="projectCount" class="count">08</span></h2></div>
+        <button class="new-project-button" id="newProject" type="button" hidden><span aria-hidden="true">＋</span> Criar projeto</button>
       </div>
       <div class="toolbar">
         <div class="filter-list" id="filters" role="group" aria-label="Filtrar projetos"></div>
         <label class="search-box"><span class="search-icon" aria-hidden="true">⌕</span><span class="sr-only">Buscar projetos</span><input id="searchInput" type="search" placeholder="Buscar no arquivo…" autocomplete="off"></label>
       </div>
-      <p class="manage-hint" id="manageHint" hidden>Modo de organização: edite, destaque, publique ou reordene seus projetos. O Firebase simulado salva as alterações neste navegador.</p>
+      <p class="manage-hint" id="manageHint" hidden>Seu espaço de criação está aberto. Edite, destaque, publique ou reordene seus projetos; as alterações ficam na conta local desta demonstração.</p>
       <div class="project-grid" id="projectGrid" aria-live="polite"></div>
-      <div class="empty-state" id="emptyState" hidden>
-        <span aria-hidden="true">✳</span>
-        <h3>Nenhum projeto por aqui</h3>
-        <p>Tente outra busca ou categoria.</p>
-      </div>
+      <div class="empty-state" id="emptyState" hidden><span aria-hidden="true">✳</span><h3>Seu arquivo começa aqui</h3><p>Crie seu primeiro projeto e acompanhe a prévia enquanto monta a apresentação.</p><button class="text-link" id="emptyCreate" type="button">Criar meu primeiro projeto <span aria-hidden="true">↗</span></button></div>
     </section>
 
     <section class="about-section" id="sobre">
       <div class="about-label"><span class="eyebrow-line"></span> Um pouco sobre</div>
-      <div class="about-copy">
-        <h2>Curiosidade como método.<br><em>Cuidado como linguagem.</em></h2>
-        <p>Sou uma designer independente que trabalha entre identidade visual, imagem e objetos. Gosto de projetos que começam com uma boa pergunta e encontram sua forma no caminho.</p>
-        <a class="text-link" href="mailto:oi@atelie.studio">Vamos conversar <span aria-hidden="true">↗</span></a>
-      </div>
+      <div class="about-copy"><h2>Curiosidade como método.<br><em>Cuidado como linguagem.</em></h2><p id="profileBio">Sou uma designer independente que trabalha entre identidade visual, imagem e objetos. Gosto de projetos que começam com uma boa pergunta e encontram sua forma no caminho.</p><a class="text-link" id="contactLink" href="mailto:oi@atelie.studio">Vamos conversar <span aria-hidden="true">↗</span></a></div>
       <div class="about-stamp" aria-hidden="true"><span>feito com<br>curiosidade</span><b>✳</b></div>
     </section>
   </main>
 
   <footer class="site-footer">
     <a class="wordmark footer-wordmark" href="#"><span class="wordmark-mark">a.</span><span>arquivo<br><small>de projetos</small></span></a>
-    <p>Um espaço para guardar o que vale ser visto.</p>
-    <span class="footer-year">© 2025—26</span>
+    <p>Um espaço para guardar o que vale ser visto.</p><span class="footer-year">© 2025—26</span>
   </footer>
 
-  <dialog class="project-dialog" id="projectDialog" aria-labelledby="detailTitle">
-    <button class="dialog-close" type="button" data-close="projectDialog" aria-label="Fechar detalhes">×</button>
-    <div id="projectDetail"></div>
+  <dialog class="auth-dialog" id="authDialog" aria-labelledby="authTitle">
+    <button class="dialog-close auth-close" type="button" data-close="authDialog" aria-label="Fechar login">×</button>
+    <div class="auth-art"><span class="auth-monogram">a.</span><p>Um arquivo<br>para o que é seu.</p><span class="auth-art-caption">PORTFÓLIO PESSOAL · EDIÇÃO INDEPENDENTE</span></div>
+    <div class="auth-panel">
+      <p class="eyebrow"><span class="eyebrow-line"></span> Seu espaço criativo</p><h2 id="authTitle">Entre no seu ateliê</h2>
+      <div class="auth-tabs" role="tablist" aria-label="Acesso à conta"><button class="auth-tab active" id="loginTab" type="button" role="tab" aria-selected="true">Entrar</button><button class="auth-tab" id="signupTab" type="button" role="tab" aria-selected="false">Criar conta</button></div>
+      <form id="authForm">
+        <label id="nameRow" hidden>Como você se chama?<input id="authName" autocomplete="name" placeholder="Seu nome artístico"></label>
+        <label>E-mail<input id="authEmail" type="email" autocomplete="email" required placeholder="voce@email.com"></label>
+        <label>Senha<input id="authPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="Mínimo de 8 caracteres"></label>
+        <p class="auth-error" id="authError" role="alert" hidden></p>
+        <button class="auth-submit" type="submit" id="authSubmit">Entrar <span aria-hidden="true">↗</span></button>
+      </form>
+      <button class="demo-login" id="demoLogin" type="button">Experimentar o perfil de demonstração <span aria-hidden="true">→</span></button>
+      <p class="demo-disclaimer">Demonstração local: contas e projetos ficam neste navegador. Não use sua senha real.</p>
+    </div>
   </dialog>
 
+  <dialog class="profile-dialog" id="profileDialog" aria-labelledby="profileTitle">
+    <form id="profileForm">
+      <div class="editor-heading"><div><p class="eyebrow">Identidade pública</p><h2 id="profileTitle">Editar perfil</h2></div><button class="dialog-close" type="button" data-close="profileDialog" aria-label="Fechar perfil">×</button></div>
+      <label>Nome artístico<input id="profileNameField" required maxlength="70"></label>
+      <label>Especialidades <span class="field-note">separe com quebras de linha</span><textarea id="profileSpecialtyField" rows="3" maxlength="140"></textarea></label>
+      <label>Sobre você<textarea id="profileBioField" rows="4" maxlength="500"></textarea></label>
+      <label>E-mail de contato<input id="profileEmailField" type="email" placeholder="oi@seuatelie.com"></label>
+      <p class="demo-disclaimer">Este perfil aparece junto ao seu portfólio público nesta demonstração.</p>
+      <div class="form-actions"><button class="cancel-button" type="button" data-close="profileDialog">Cancelar</button><button class="save-button" type="submit">Salvar perfil <span aria-hidden="true">↗</span></button></div>
+      <button class="signout-button" id="signOutButton" type="button">Sair da conta</button>
+    </form>
+  </dialog>
+
+  <dialog class="project-dialog" id="projectDialog" aria-labelledby="detailTitle"><button class="dialog-close" type="button" data-close="projectDialog" aria-label="Fechar detalhes">×</button><div id="projectDetail"></div></dialog>
+
   <dialog class="editor-dialog" id="editorDialog" aria-labelledby="editorTitle">
-    <form id="projectForm" method="dialog">
-      <div class="editor-heading">
-        <div><p class="eyebrow">Arquivo pessoal</p><h2 id="editorTitle">Novo projeto</h2></div>
-        <button class="dialog-close" type="button" data-close="editorDialog" aria-label="Fechar formulário">×</button>
-      </div>
+    <form id="projectForm">
+      <div class="editor-heading"><div><p class="eyebrow"><span class="eyebrow-line"></span> Editor de projeto · prévia ao vivo</p><h2 id="editorTitle">Monte sua apresentação</h2></div><button class="dialog-close" type="button" data-close="editorDialog" aria-label="Fechar editor">×</button></div>
       <input type="hidden" id="projectId">
-      <label>Título do projeto<input id="titleField" name="title" required maxlength="80" placeholder="Ex.: Jardim de dentro"></label>
-      <div class="form-row">
-        <label>Categoria<select id="categoryField" name="category"><option>Identidade visual</option><option>Fotografia</option><option>Ilustração</option><option>Editorial</option><option>Objeto</option><option>Direção de arte</option><option>Outro</option></select></label>
-        <label>Ano<input id="yearField" name="year" inputmode="numeric" maxlength="4" placeholder="2026"></label>
+      <div class="composer-layout">
+        <section class="composer-fields" aria-label="Conteúdo do projeto">
+          <label>Título do projeto<input id="titleField" name="title" required maxlength="80" placeholder="Ex.: Jardim de dentro"></label>
+          <div class="form-row"><label>Categoria<select id="categoryField" name="category"><option>Identidade visual</option><option>Fotografia</option><option>Ilustração</option><option>Editorial</option><option>Objeto</option><option>Direção de arte</option><option>Outro</option></select></label><label>Ano<input id="yearField" name="year" inputmode="numeric" maxlength="4" placeholder="2026"></label></div>
+          <label>Conte a história<textarea id="descriptionField" name="description" rows="4" required maxlength="500" placeholder="Qual era a ideia? Como o projeto tomou forma?"></textarea></label>
+          <div class="upload-card" id="uploadCard"><input id="imageFileField" type="file" accept="image/png,image/jpeg,image/webp"><span class="upload-icon" aria-hidden="true">↥</span><span class="upload-title">Solte uma imagem aqui ou <b>escolha um arquivo</b></span><span class="upload-help">JPG, PNG ou WebP · até 2 MB</span></div>
+          <label>Ou use uma imagem por link<input id="imageField" name="image" type="url" placeholder="https://…"></label>
+          <label>Palavras-chave <span class="field-note">separadas por vírgula</span><input id="tagsField" name="tags" placeholder="editorial, cor, impressão"></label>
+          <div class="composer-options"><label class="check-row"><input id="featuredField" type="checkbox"> Destacar no portfólio</label><label class="check-row"><input id="publishedField" type="checkbox" checked> Publicar agora</label></div>
+        </section>
+        <aside class="preview-panel" aria-label="Prévia do projeto">
+          <div class="preview-toolbar"><span><i></i> Prévia em tempo real</span><div><button class="preview-mode active" type="button" data-preview-mode="desktop" aria-pressed="true">Desktop</button><button class="preview-mode" type="button" data-preview-mode="mobile" aria-pressed="false">Celular</button></div></div>
+          <div class="preview-stage"><article class="preview-frame" id="previewFrame"><div class="preview-window"><span></span><span></span><span></span><small>SEU PORTFÓLIO</small></div><div class="preview-cover" id="previewCover"><img id="previewImage" alt=""><span id="previewPlaceholder">Sua imagem de capa<br>aparecerá aqui</span><b id="previewFeatured" hidden>✳</b></div><div class="preview-copy"><span class="preview-category" id="previewCategory">CATEGORIA</span><h3 id="previewTitle">Nome do seu projeto</h3><p id="previewDescription">A descrição do projeto vai aparecer aqui, com o contexto e o processo que você quiser compartilhar.</p><div class="preview-meta"><span id="previewYear">2026</span><span id="previewTags">SUAS PALAVRAS-CHAVE</span></div></div></article></div>
+          <p class="preview-note"><span aria-hidden="true">✳</span> A prévia acompanha cada alteração antes de publicar.</p>
+        </aside>
       </div>
-      <label>Descrição<textarea id="descriptionField" name="description" rows="3" required maxlength="500" placeholder="Conte um pouco sobre a ideia e o processo."></textarea></label>
-      <label>Imagem de capa (URL)<input id="imageField" name="image" type="url" placeholder="https://…"></label>
-      <label>Tags <span class="field-note">separadas por vírgula</span><input id="tagsField" name="tags" placeholder="editorial, cor, impressão"></label>
-      <label class="check-row"><input id="featuredField" type="checkbox"> Destacar na página inicial</label>
-      <label class="check-row"><input id="publishedField" type="checkbox" checked> Publicar no portfólio</label>
       <p class="form-error" id="formError" role="alert" hidden></p>
-      <div class="form-actions"><button class="cancel-button" type="button" data-close="editorDialog">Cancelar</button><button class="save-button" type="submit">Salvar projeto <span aria-hidden="true">↗</span></button></div>
+      <div class="composer-footer"><p><span class="eyebrow-line"></span> Você pode salvar como rascunho e voltar depois.</p><div class="form-actions"><button class="cancel-button" type="button" data-close="editorDialog">Cancelar</button><button class="draft-button" id="saveDraftButton" type="button">Salvar rascunho</button><button class="save-button" type="submit">Publicar projeto <span aria-hidden="true">↗</span></button></div></div>
     </form>
   </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="firebase-mock.js"></script>
-  <script src="app.js"></script>
+  <script src="firebase-mock.js"></script><script src="app.js"></script>
 </body>
 </html>
