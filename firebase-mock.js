@@ -47,7 +47,8 @@
         firestore.collection("profiles", uid).set({ displayName: "Ateliê Demo", specialty: "Direção de arte\nDesign gráfico\nImagem & matéria", bio: "Sou uma designer independente que trabalha entre identidade visual, imagem e objetos. Gosto de projetos que começam com uma boa pergunta e encontram sua forma no caminho.", contactEmail: normalizedEmail });
       }
       const account = accounts[normalizedEmail];
-      if (!account || account.passwordDigest !== await digest(password, account.uid)) throw new Error("E-mail ou senha não conferem.");
+      if (!account) throw new Error("Esta conta ainda não foi criada neste navegador. Use Criar conta ou experimente o perfil de demonstração.");
+      if (account.passwordDigest !== await digest(password, account.uid)) throw new Error("A senha não confere para esta conta local.");
       auth.currentUser = publicUser(account);
       write(sessionKey, { email: normalizedEmail });
       listeners.forEach(function (callback) { callback(auth.currentUser); });
