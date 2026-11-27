@@ -1,4 +1,5 @@
 const STORAGE_KEY = "atelier-portfolio-projects-v1";
+const firebaseBackend = window.firebaseMock;
 const fallbackImage = "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1400&q=85";
 const starterProjects = [
   { id: "p1", title: "Casa entre folhas", category: "Direção de arte", year: "2025", description: "Uma identidade visual para um refúgio cercado pela mata. O projeto explora a relação entre arquitetura, paisagem e hospitalidade.", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85", tags: ["hospitalidade", "natureza", "identidade"], featured: true, published: true, order: 0 },
@@ -13,10 +14,16 @@ const starterProjects = [
 
 function readProjects() {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return starterProjects.map(function (project) { return Object.assign({}, project, { tags: project.tags.slice() }); });
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : starterProjects.slice();
+    const collection = firebaseBackend.firestore.collection("projects");
+    const existing = collection.get();
+    if (Array.isArray(existing)) return existing;
+    const legacy = localStorage.getItem(STORAGE_KEY);
+    const migrated = legacy ? JSON.parse(legacy) : null;
+    const initial = Array.isArray(migrated)
+      ? migrated
+      : starterProjects.map(function (project) { return Object.assign({}, project, { tags: project.tags.slice() }); });
+    collection.setAll(initial);
+    return initial;
   } catch (error) {
     return starterProjects.slice();
   }
@@ -40,6 +47,12 @@ const editor = document.getElementById("editorDialog");
 const detail = document.getElementById("projectDialog");
 const form = document.getElementById("projectForm");
 const toast = document.getElementById("toast");
+const backendStatus = document.getElementById("backendStatus");
+
+firebaseBackend.auth.onAuthStateChanged(function (user) {
+  backendStatus.textContent = user ? "Firebase simulado · conectado" : "Firebase simulado · desconectado";
+});
+firebaseBackend.auth.signInAnonymously();
 
 function escapeHtml(value) {
   return String(value == null ? "" : value).replace(/[&<>"']/g, function (character) {
@@ -58,10 +71,11 @@ function imageUrl(value) {
 
 function saveProjects() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+    const saved = firebaseBackend.firestore.collection("projects").setAll(projects);
+    if (!saved) throw new Error("local emulator storage unavailable");
     return true;
   } catch (error) {
-    showToast("Não foi possível salvar neste navegador.");
+    showToast("Não foi possível salvar no Firebase simulado.");
     return false;
   }
 }
@@ -249,6 +263,7 @@ form.addEventListener("submit", function (event) {
   project.tags = document.getElementById("tagsField").value.split(",").map(function (tag) { return tag.trim(); }).filter(Boolean);
   project.featured = document.getElementById("featuredField").checked;
   project.published = document.getElementById("publishedField").checked;
+  firebaseBackend.storage.saveReference(project.id, image);
   saveProjects();
   editor.close();
   render();
